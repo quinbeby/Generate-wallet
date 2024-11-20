@@ -1,0 +1,66 @@
+1.  Install readme.md :
+   pip install eth-account
+
+   pip install solana
+
+2. buat file Python
+
+nano generate_wallets.py
+
+3. Salin script berikut ke dalam editor:
+README.MD
+
+# Required libraries
+try:
+    from eth_account import Account
+    from solders.keypair import Keypair
+    import json
+except ImportError:
+    print("Installing required libraries...")
+    import os
+    os.system("pip install eth-account solders")
+    from eth_account import Account
+    from solders.keypair import Keypair
+    import json
+
+# Function to generate an EVM wallet
+def generate_evm_wallet():
+    account = Account.create()
+    return {
+        "address": account.address,
+        "private_key": account.key.hex()
+    }
+
+# Function to generate a Solana wallet
+def generate_solana_wallet():
+    keypair = Keypair()
+    return {
+        "address": str(keypair.pubkey()),  # Corrected for solders
+        "private_key": keypair.secret().hex()
+    }
+
+# Generate 5 wallets for EVM and Solana
+wallets = {"evm_wallets": [], "solana_wallets": []}
+for _ in range(5):
+    wallets["evm_wallets"].append(generate_evm_wallet())
+    wallets["solana_wallets"].append(generate_solana_wallet())
+
+# Save wallets to a JSON file
+with open("wallets.json", "w") as file:
+    json.dump(wallets, file, indent=4)
+
+print("Wallets have been successfully generated and saved in 'wallets.json'.")
+
+
+4. Jalankan script menggunakan Python 3:
+   python3 generate_wallets.py
+
+5. Anda dapat memeriksa isi file
+    cat wallets.json
+
+6. Download File (Opsional): Jika ingin mengunduh file ke komputer lokal, gunakan perintah SCP (jika diakses via SSH):
+    README.MD
+    scp root@<IP-ADDRESS>:/root/wallets.json
+
+  NOTE : Ganti <IP-ADDRESS> dengan IP server VPS Anda.
+
